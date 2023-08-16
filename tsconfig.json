@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "noUnusedLocals": true,
+    "baseUrl": ".",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "preserve",
+    "lib": ["ESNext"],
+    "target": "esnext",
+    "plugins": [
+      {
+        "transform": "typia/lib/transform"
+      }
+    ],
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "outDir": "build",
+    "strictNullChecks": true
+  },
+  "exclude": ["node_modules", "dist"],
+  "include": ["module"]
+}

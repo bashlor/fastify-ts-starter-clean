@@ -1,0 +1,5 @@
+{
+  "watch": ["./module/core/src"],
+  "ext": "ts,mjs,js,json,yaml,yml",
+  "exec": "vite-node module/core/src/app.ts | npx pino-pretty"
+}
