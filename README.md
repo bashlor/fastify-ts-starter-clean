@@ -20,6 +20,7 @@ However, it is easy to add any of these features by following the same architect
 - [Typescript](https://www.typescriptlang.org/) - Typed superset of JavaScript that compiles to plain JavaScript.
 - [Awilix](https://github.com/jeffijoe/awilix) - Dependency injection container. Configured to work with Fastify.
 - [Typia](https://typia.io) - Typescript runtime type checking library.
+- [VineJs](https://vinejs.dev/docs/introduction) - Validation library for Http requests. Configured to work with Fastify.
 - [Vitest](https://vitest.dev/) - Test runner. Configured to run transformed code with Typia
 - [Cucumber](https://cucumber.io/) - BDD testing framework (useful for doing wishful programming).
 - [Neverthrow](https://github.com/supermacro/neverthrow) - Result type for handling errors. Way more better than throwing exceptions, and using Typescrippt union types.

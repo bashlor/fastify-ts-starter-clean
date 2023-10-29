@@ -1,3 +1,4 @@
+import { errors } from '@vinejs/vine';
 import * as process from 'process';
 
 import { HttpServer } from './presentation/http-server.js';
@@ -8,14 +9,19 @@ const httpServer = new HttpServer(3000);
 httpServer.setErrorHandler((error, request, reply) => {
   httpServer.fastify?.log.error(error);
 
-  const statusCode = Number(error.statusCode) || 500;
+  const fastifyStatusCode = Number(error.statusCode) || 500;
 
-  if (statusCode >= 500) {
-    reply.status(statusCode).send({ code: statusCode, instance: request.url, message: 'internal Server Error' });
+  if (error instanceof errors.E_VALIDATION_ERROR) {
+    reply.status(400).send({ code: error.status, instance: request.url, details: error.messages });
     return;
   }
 
-  reply.status(statusCode).send({ code: statusCode, instance: request.url, message: error.message });
+  if (fastifyStatusCode >= 500) {
+    reply.status(fastifyStatusCode).send({ code: fastifyStatusCode, instance: request.url, message: 'internal server error' });
+    return;
+  }
+
+  reply.status(fastifyStatusCode).send({ code: fastifyStatusCode, instance: request.url, message: error.message });
 });
 
 httpServer.loadRouter(routerHttp, '/api');

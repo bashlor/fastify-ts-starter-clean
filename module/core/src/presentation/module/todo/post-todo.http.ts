@@ -1,13 +1,11 @@
 import * as crypto from 'crypto';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { err, ok, Result } from 'neverthrow';
-import { assertEquals, TypeGuardError } from 'typia';
 
 import { TodoService } from '../../../application/service/todo.service.js';
 import { newTodo, Todo } from '../../../domain/entity/todo/todo.js';
 import { HttpErrorPayload, serviceErrorToHttpPayload } from '../../error/code.error.js';
-import { formatTypeGuardErrorToSafeErrorResponse, ParsingErrorTypeEnum } from '../../util/typia/util.typia.js';
-import { PostTodoRequestBody } from './request-body/post-todo.request-body.js';
+import {PostTodoRequestBody, postTodoRequestBodyValidator} from './request-body/post-todo.request-body.js';
 
 export const postTodoHttpHandler = {
   url: '/todo',
@@ -20,13 +18,10 @@ async function postTodoHandler(
 ) {
   const todoService = request.diScope.resolve(TodoService.name) as TodoService;
 
-  const requestBodyResult = parseRequestBody(request);
+  const requestBody = await postTodoRequestBodyValidator.validate(request.body) as PostTodoRequestBody;
 
-  if (requestBodyResult.isErr()) {
-    return reply.status(400).send(requestBodyResult.error);
-  }
 
-  const requestResult = await handleRequest(request.url, requestBodyResult.value, todoService);
+  const requestResult = await handleRequest(request.url, requestBody, todoService);
 
   return requestResult.match(
     (todo) => reply.status(201).send(todo),
@@ -34,21 +29,7 @@ async function postTodoHandler(
   );
 }
 
-function parseRequestBody(request: FastifyRequest): Result<PostTodoRequestBody, HttpErrorPayload> {
-  try {
-    assertEquals<PostTodoRequestBody>(request.body);
 
-    return ok(request.body as PostTodoRequestBody);
-  } catch (error) {
-    const errorResponse = formatTypeGuardErrorToSafeErrorResponse(
-      ParsingErrorTypeEnum.RequestBody,
-      error as TypeGuardError,
-      request.url
-    );
-
-    return err(errorResponse);
-  }
-}
 
 async function handleRequest(
   url: string,

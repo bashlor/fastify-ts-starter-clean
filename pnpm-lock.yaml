@@ -11,6 +11,9 @@ dependencies:
   '@fastify/cors':
     specifier: ^8.4.1
     version: 8.4.1
+  '@vinejs/vine':
+    specifier: ^1.6.0
+    version: 1.6.0
   awilix:
     specifier: ^9.0.0
     version: 9.0.0
@@ -787,6 +790,11 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
+  /@poppinss/macroable@1.0.0:
+    resolution: {integrity: sha512-o2DLCLMZwLLSULD9iQR5hg+gSp3AuKLNBBpIRmjnxq5i3n4aIQ3eSE3W9ER4EJvdNBjhSaTQDtt9zMDAjUcZoA==}
+    engines: {node: '>=18.16.0'}
+    dev: false
+
   /@rollup/plugin-typescript@11.1.5(typescript@5.1.6):
     resolution: {integrity: sha512-rnMHrGBB0IUEv69Q8/JGRD/n4/n6b3nfpufUu26axhUcboUzv/twfZU8fIBbTOphRAe0v8EyxzeDpKXqGHfyDA==}
     engines: {node: '>=14.0.0'}
@@ -863,6 +871,10 @@ packages:
   /@types/uuid@9.0.1:
     resolution: {integrity: sha512-rFT3ak0/2trgvp4yYZo5iKFEPsET7vKydKF+VRCxlQ9bpheehyAJH89dAkaLEq/j/RZXJIqcgsmPJKUP1Z28HA==}
     dev: true
+
+  /@types/validator@13.11.5:
+    resolution: {integrity: sha512-xW4qsT4UIYILu+7ZrBnfQdBYniZrMLYYK3wN9M/NdeIHgBN5pZI2/8Q7UfdWIcr5RLJv/OGENsx91JIpUUoC7Q==}
+    dev: false
 
   /@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0)(eslint@8.52.0)(typescript@5.1.6):
     resolution: {integrity: sha512-TiZzBSJja/LbhNPvk6yc0JrX9XqhQ0hdh6M2svYfsHGejaKFIAGd9MQ+ERIMzLGlN/kZoYIgdxFV0PuljTKXag==}
@@ -997,6 +1009,23 @@ packages:
   /@ungap/structured-clone@1.2.0:
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
     dev: true
+
+  /@vinejs/compiler@2.2.0:
+    resolution: {integrity: sha512-4odxw9uFHHPdv9hmQ3WuvpIQyJDdjjOiMcbLDLW5YxH0EVTs2BPHRUNFrRnJwTcUo2eG5qqY1A9FwPvE16fO6w==}
+    engines: {node: '>=18.0.0'}
+    dev: false
+
+  /@vinejs/vine@1.6.0:
+    resolution: {integrity: sha512-QQPOMVujtMpOZ3tfmyaKzxif+qaMnN5hTuWAdzN+mrjreWgUzquQQiiRG8AcFioQh2ax+wpQ3BO6oJwzEzBBDg==}
+    engines: {node: '>=18.16.0'}
+    dependencies:
+      '@poppinss/macroable': 1.0.0
+      '@types/validator': 13.11.5
+      '@vinejs/compiler': 2.2.0
+      camelcase: 7.0.1
+      normalize-url: 8.0.0
+      validator: 13.11.0
+    dev: false
 
   /@vitest/expect@0.34.6:
     resolution: {integrity: sha512-QUzKpUQRc1qC7qdGo7rMK3AkETI7w18gTCUrsNnyjjJKYiuUB9+TQK3QnR1unhCnWRC0AbKv2omLGQDF/mIjOw==}
@@ -1300,6 +1329,11 @@ packages:
     dependencies:
       pascal-case: 3.1.2
       tslib: 2.6.2
+    dev: false
+
+  /camelcase@7.0.1:
+    resolution: {integrity: sha512-xlx1yCK2Oc1APsPXDL2LdlNP6+uu8OCDdhOBSVT279M/S+y75O30C2VuD8T2ogdePBBl7PfPF4504tnLgX3zfw==}
+    engines: {node: '>=14.16'}
     dev: false
 
   /capital-case@1.0.4:
@@ -2627,6 +2661,11 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /normalize-url@8.0.0:
+    resolution: {integrity: sha512-uVFpKhj5MheNBJRTiMZ9pE/7hD1QTeEvugSJW/OmLzAp78PB5O6adfMNTvmfKhXBkvCzC+rqifWcVYpGFwTjnw==}
+    engines: {node: '>=14.16'}
+    dev: false
+
   /npm-run-path@4.0.1:
     resolution: {integrity: sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==}
     engines: {node: '>=8'}
@@ -3576,6 +3615,11 @@ packages:
     resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
     hasBin: true
     dev: true
+
+  /validator@13.11.0:
+    resolution: {integrity: sha512-Ii+sehpSfZy+At5nPdnyMhx78fEoPDkR2XW/zimHEL3MyGJQOCQ7WeP20jPYRz7ZCpcKLB21NxuXHF3bxjStBQ==}
+    engines: {node: '>= 0.10'}
+    dev: false
 
   /verror@1.10.1:
     resolution: {integrity: sha512-veufcmxri4e3XSrT0xwfUR7kguIkaxBeosDg00yDWhk49wdwkSUrvvsm7nc75e1PUyvIeZj6nS8VQRYz2/S4Xg==}
