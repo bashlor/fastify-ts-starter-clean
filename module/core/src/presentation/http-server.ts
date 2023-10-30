@@ -95,7 +95,7 @@ export class HttpServer {
     if (this.fastify && this.cors) {
       this.fastify.register(fastifyCors, {
         origin: this.cors ? this.allowedOrigins.map((origin) => origin.toString()) : '*',
-        methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+        methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS', 'HEAD'],
         allowedHeaders: ['Content-Type', 'Authorization'],
       });
 
