@@ -12,15 +12,21 @@ import {
 import { err, ok, Result } from 'neverthrow';
 
 import { initContainer } from '../infrastructure/configuration/dependency-container/dependency-container.configuration.js';
+import { EnvironmentConfiguration } from '../infrastructure/configuration/environment/environment.configuration.js';
 
 export class HttpServer {
   fastify: FastifyInstance | null = null;
   port: number;
+  allowedOrigins: URL[] = [];
+  cors: boolean;
 
-  constructor(port: number) {
+  constructor(configuration: EnvironmentConfiguration) {
+    this.port = configuration.port;
+    this.allowedOrigins = configuration.allowedOrigins;
+    this.cors = configuration.cors;
+
     this.init();
     this.loadInternalPlugins();
-    this.port = port;
   }
 
   async listen(host: string): Promise<Result<null, Error>> {
@@ -86,9 +92,47 @@ export class HttpServer {
     initContainer();
   }
   private loadInternalPlugins() {
-    if (this.fastify) {
+    if (this.fastify && this.cors) {
       this.fastify.register(fastifyCors, {
-        origin: '*',
+        origin: this.cors ? this.allowedOrigins.map((origin) => origin.toString()) : '*',
+        methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+      });
+
+      this.fastify.addHook('onRequest', (request, reply, done) => {
+        const origin = request.headers.origin;
+
+        if (!origin) {
+          reply.status(403).send({
+            code: 403,
+            instance: request.url,
+            message: 'Forbidden',
+          });
+
+          done();
+          return;
+        }
+
+        const originURL = new URL(origin);
+
+        if (origin && !this.allowedOrigins.some((allowedOrigin) => originURL.hostname === allowedOrigin.hostname)) {
+          reply.status(403).send({
+            code: 403,
+            instance: request.url,
+            message: 'Forbidden',
+          });
+
+          done();
+          return;
+        }
+
+        reply.header('Access-Control-Allow-Origin', origin);
+        reply.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        reply.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+        done();
+
+
       });
     }
   }
