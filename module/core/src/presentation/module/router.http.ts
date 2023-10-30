@@ -8,6 +8,13 @@ export default plugin(
     const { prefix } = opts;
     fastify.register(helloRouter, { prefix });
     fastify.register(todoRouter, { prefix });
+
+    fastify.register((instance, opts, done) => {
+        instance.setNotFoundHandler((request, reply) => {
+            reply.status(404).send({ code: 404, instance: request.url, message: 'resource not found' });
+        });
+        done();
+    });
   },
   { name: 'router' }
 );

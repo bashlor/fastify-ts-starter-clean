@@ -11,8 +11,10 @@ httpServer.setErrorHandler((error, request, reply) => {
 
   const fastifyStatusCode = Number(error.statusCode) || 500;
 
+
+  //VineJS validation error
   if (error instanceof errors.E_VALIDATION_ERROR) {
-    reply.status(400).send({ code: error.status, instance: request.url, details: error.messages });
+    reply.status(error.status).send({ code: error.status, instance: request.url, details: error.messages });
     return;
   }
 
