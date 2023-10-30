@@ -106,7 +106,7 @@ export class HttpServer {
           reply.status(403).send({
             code: 403,
             instance: request.url,
-            message: 'Forbidden',
+            message: 'access denied',
           });
 
           done();
