@@ -9,10 +9,11 @@ import {
   FastifyReply,
   FastifyRequest,
 } from 'fastify';
-import { err, ok, Result } from 'neverthrow';
 
 import { initContainer } from '../infrastructure/configuration/dependency-container/dependency-container.configuration.js';
 import { EnvironmentConfiguration } from '../infrastructure/configuration/environment/environment.configuration.js';
+import {Err, Ok} from '../shared/lib/monad/result/functions.js';
+import { Result } from '../shared/lib/monad/result/type.js';
 
 export class HttpServer {
   fastify: FastifyInstance | null = null;
@@ -31,54 +32,57 @@ export class HttpServer {
 
   async listen(host: string): Promise<Result<null, Error>> {
     try {
-      if (!this.fastify) return err(new Error('HttpServer has been closed.'));
+      if (!this.fastify) return Err(new Error('HttpServer has been closed.'));
       await this.fastify.listen({
         port: this.port,
         host,
       });
-      return ok(null);
+      return Ok(null);
     } catch (error) {
-      return err(error as Error);
+      return Err(error as Error);
     }
   }
 
   async close(): Promise<Result<null, Error>> {
-    if (this.fastify === null) return err(new Error('Server is not listening'));
+    if (this.fastify === null) return Err(new Error('Server is not listening'));
     try {
       await this.fastify.close();
       this.fastify = null;
-      return ok(null);
+      return Ok(null);
     } catch (error) {
-      return err(error as Error);
+      return Err(error as Error);
     }
   }
 
   setErrorHandler(handler: (error: FastifyError, request: FastifyRequest, reply: FastifyReply) => void) {
     try {
-      if (!this.fastify) return err(new Error('HttpServer has been closed.'));
+      if (!this.fastify) {
+        return Err(new Error('HttpServer has been closed.'));
+      }
+
       this.fastify.setErrorHandler(handler);
     } catch (error) {
-      return err(error as Error);
+      return Err(error as Error);
     }
   }
 
   loadRouter(router: FastifyPluginAsync, prefix?: string): Result<null, Error> {
     try {
-      if (!this.fastify) return err(new Error('HttpServer has been closed.'));
+      if (!this.fastify) return Err(new Error('HttpServer has been closed.'));
       this.fastify.register(router, { prefix });
-      return ok(null);
+      return Ok(null);
     } catch (error) {
-      return err(error as Error);
+      return Err(error as Error);
     }
   }
 
   loadExternalPlugin(plugin: FastifyPluginCallback | FastifyPluginAsync, ...args: any[]): Result<null, Error> {
     try {
-      if (!this.fastify) return err(new Error('HttpServer has been closed.'));
+      if (!this.fastify) return Err(new Error('HttpServer has been closed.'));
       this.fastify.register(plugin, ...args);
-      return ok(null);
+      return Ok(null);
     } catch (error) {
-      return err(error as Error);
+      return Err(error as Error);
     }
   }
 

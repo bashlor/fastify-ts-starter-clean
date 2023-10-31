@@ -1,9 +1,9 @@
-import { err, ok, Result } from 'neverthrow';
-
-import { TodoCollection } from '../../domain/collection/todo.collection.js';
-import { Todo } from '../../domain/entity/todo/todo.js';
-import { ErrorCode } from './error/code.error.js';
-import { ServiceError } from './error/service.error.js';
+import {TodoCollection} from '../../domain/collection/todo.collection.js';
+import {Todo} from '../../domain/entity/todo/todo.js';
+import {Err, Ok} from '../../shared/lib/monad/result/functions.js';
+import {Result} from '../../shared/lib/monad/result/type.js';
+import {ErrorCode} from './error/code.error.js';
+import {ServiceError} from './error/service.error.js';
 
 export class TodoService {
   constructor(private readonly todos: TodoCollection) {}
@@ -20,27 +20,25 @@ export class TodoService {
         safeMessage: 'Failed to create todo',
       };
 
-      return err(serviceError);
+      return Err(serviceError);
     }
 
-    return ok(addResult.value);
+    return Ok(addResult.unwrap());
   }
 
   async getAll(): Promise<Result<Todo[], ServiceError>> {
     const getAllResult = await this.todos.getAll();
 
     if (getAllResult.isErr()) {
-      const repositoryError = getAllResult.error;
-
       const serviceError = {
         code: ErrorCode.OperationFailed,
-        internalError: repositoryError,
+        internalError: getAllResult.error,
         safeMessage: 'Failed to get todos',
       };
 
-      return err(serviceError);
+      return Err(serviceError);
     }
 
-    return ok(getAllResult.value);
+    return Ok(getAllResult.unwrap());
   }
 }

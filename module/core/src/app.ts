@@ -1,10 +1,17 @@
 import { errors } from '@vinejs/vine';
 import * as process from 'process';
 
+import {
+  checkEnvironment,
+  environmentConfiguration
+} from './infrastructure/configuration/environment/environment.configuration.js';
 import { HttpServer } from './presentation/http-server.js';
 import routerHttp from './presentation/module/router.http.js';
 
-const httpServer = new HttpServer(3000);
+checkEnvironment();
+const environment = environmentConfiguration();
+
+const httpServer = new HttpServer(environment);
 
 httpServer.setErrorHandler((error, request, reply) => {
   httpServer.fastify?.log.error(error);

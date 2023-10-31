@@ -1,15 +1,23 @@
 import { fastifyPlugin } from 'fastify-plugin';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { EnvironmentConfiguration } from '../infrastructure/configuration/environment/environment.configuration.js';
 import { HttpServer } from './http-server.js';
 import routerHttp from './module/router.http.js';
 
 describe('HttpServer', () => {
   let httpServer: HttpServer;
-  const port = 3100;
 
   beforeEach(() => {
-    httpServer = new HttpServer(port);
+    const configuration: EnvironmentConfiguration = {
+      environment: 'test',
+      host: '0.0.0.0',
+      port: 3000,
+      allowedOrigins: [],
+      cors: false,
+    };
+
+    httpServer = new HttpServer(configuration);
   });
 
   afterEach(() => {
@@ -23,16 +31,24 @@ describe('HttpServer', () => {
 
     it('should return a null result object if everything went well', async () => {
       const result = await httpServer.listen('localhost');
-      expect(result._unsafeUnwrap()).toBeNull();
+      expect(result.unwrap()).toBeNull();
     });
 
     it('should return an error if something went wrong', async () => {
-      const httpServer2 = new HttpServer(port);
+      const configuration: EnvironmentConfiguration = {
+        environment: 'test',
+        host: '0.0.0.0',
+        port: 3000,
+        allowedOrigins: [],
+        cors: false,
+      };
+
+      const httpServer2 = new HttpServer(configuration);
 
       await httpServer.listen('localhost');
       const result2 = await httpServer2.listen('localhost');
 
-      expect(result2._unsafeUnwrapErr()).toBeInstanceOf(Error);
+      expect(result2._unsafeUnwrap()).toBeInstanceOf(Error);
     });
 
     it('should return an error if listen is called on a closed server', async () => {
@@ -40,7 +56,7 @@ describe('HttpServer', () => {
       const result = await httpServer.listen('0.0.0.0');
 
       expect(result.isErr()).toBeTruthy();
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(Error);
+      expect(result._unsafeUnwrap()).toBeInstanceOf(Error);
     });
   });
 
@@ -82,7 +98,7 @@ describe('HttpServer', () => {
       });
 
       expect(result?.isErr()).toBeTruthy();
-      expect(result?._unsafeUnwrapErr()).toBeInstanceOf(Error);
+      expect(result?._unsafeUnwrap()).toBeInstanceOf(Error);
     });
   });
 
@@ -98,14 +114,22 @@ describe('HttpServer', () => {
     });
 
     it('should execute an error if the server was not initialized', async () => {
-      const httpServer2 = new HttpServer(5000);
+      const configuration: EnvironmentConfiguration = {
+        environment: 'test',
+        host: '0.0.0.0',
+        port: 5000,
+        allowedOrigins: [],
+        cors: false,
+      };
+
+      const httpServer2 = new HttpServer(configuration);
       const closeResult = await httpServer2.close();
       const closeResult2 = await httpServer2.close();
 
       expect(closeResult.isOk()).toBe(true); // Even if the listen method was not called, the close method returns an ok result at the first time it is called, and results in an error at the second time it is called.
 
       expect(closeResult2.isErr()).toBe(true); // Return this time an error, because the fastify instance has been reset.
-      expect(closeResult2._unsafeUnwrapErr()).toBeInstanceOf(Error);
+      expect(closeResult2._unsafeUnwrap()).toBeInstanceOf(Error);
     });
   });
 
@@ -140,7 +164,7 @@ describe('HttpServer', () => {
       const loadHandlersResult = await httpServer.loadRouter(routerHttp, '/');
 
       expect(loadHandlersResult.isErr()).toBeTruthy();
-      expect(loadHandlersResult._unsafeUnwrapErr()).toBeInstanceOf(Error);
+      expect(loadHandlersResult._unsafeUnwrap()).toBeInstanceOf(Error);
     });
   });
 });

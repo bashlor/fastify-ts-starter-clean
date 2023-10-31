@@ -1,23 +1,33 @@
 import { asFunction } from 'awilix';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { TodoService } from '../../../application/service/todo.service.js';
 import { newTodo } from '../../../domain/entity/todo/todo.js';
 import {
   DatabaseHandler,
   getMemoryDatabaseHandler,
 } from '../../../infrastructure/configuration/database/database.configuration.js';
 import { getContainer } from '../../../infrastructure/configuration/dependency-container/dependency-container.configuration.js';
+import {EnvironmentConfiguration} from '../../../infrastructure/configuration/environment/environment.configuration.js';
 import { TodoRepository } from '../../../infrastructure/repository/todo.repository.js';
 import { HttpServer } from '../../http-server.js';
 import { registry as todoRouter } from './registry.http.js';
-import { TodoService } from '../../../application/service/todo.service.js';
 
 describe('/api/todo', () => {
   let httpServer: HttpServer;
   let dbHandler: DatabaseHandler;
 
   beforeEach(() => {
-    httpServer = new HttpServer(3000);
+    const configuration: EnvironmentConfiguration = {
+      environment: 'test',
+      host: '0.0.0.0',
+      port: 3000,
+      allowedOrigins: [],
+      cors: false,
+    };
+
+    httpServer = new HttpServer(configuration);
+
     httpServer.loadRouter(todoRouter, '/api');
 
     const container = getContainer();

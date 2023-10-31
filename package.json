@@ -12,7 +12,6 @@
     "fastify": "^4.24.3",
     "fastify-plugin": "^4.5.1",
     "lowdb": "^6.1.1",
-    "neverthrow": "^6.1.0",
     "typia": "^5.2.4"
   },
   "devDependencies": {

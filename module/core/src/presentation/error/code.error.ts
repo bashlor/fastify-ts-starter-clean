@@ -1,6 +1,6 @@
 import { ServiceError } from '../../application/service/error/service.error.js';
 
-const HttpCodes = {
+const HttpCodesRelatedToServices = {
   NotFound: 404,
   InvalidValues: 400,
   Unauthorized: 401,
@@ -12,7 +12,7 @@ const HttpCodes = {
   OperationFailed: 500,
 } as const;
 
-export type ErrorType = keyof typeof HttpCodes;
+export type ErrorType = keyof typeof HttpCodesRelatedToServices;
 
 export type HttpErrorPayload = {
   code: number;
@@ -23,7 +23,7 @@ export type HttpErrorPayload = {
 };
 
 function errorCodeToHttpStatus(errorType: ErrorType) {
-  return errorType in HttpCodes ? HttpCodes[errorType] : HttpCodes.InternalError;
+  return errorType in HttpCodesRelatedToServices ? HttpCodesRelatedToServices[errorType] : HttpCodesRelatedToServices.InternalError;
 }
 
 export function serviceErrorToHttpPayload(

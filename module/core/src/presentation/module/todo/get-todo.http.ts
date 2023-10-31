@@ -1,8 +1,10 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { err, ok, Result } from 'neverthrow';
 
 import { TodoService } from '../../../application/service/todo.service.js';
 import { Todo } from '../../../domain/entity/todo/todo.js';
+import { matchResult } from '../../../infrastructure/util/helper.util.js';
+import { Err, Ok } from '../../../shared/lib/monad/result/functions.js';
+import { Result } from '../../../shared/lib/monad/result/type.js';
 import { HttpErrorPayload, serviceErrorToHttpPayload } from '../../error/code.error.js';
 
 export const getTodoHttpHandler = {
@@ -18,10 +20,10 @@ async function getTodoHandler(
 
   const requestResult = await handleRequest(todoService);
 
-  return requestResult.match(
-    (todos) => reply.status(200).send(todos),
-    (error) => reply.status(error.code).send(error)
-  );
+  return matchResult(requestResult, {
+    ok: (todos) => reply.status(200).send(todos),
+    error: (error) => reply.status(error.code).send(error),
+  });
 }
 
 async function handleRequest(todoService: TodoService): Promise<Result<Todo[], HttpErrorPayload>> {
@@ -32,8 +34,8 @@ async function handleRequest(todoService: TodoService): Promise<Result<Todo[], H
 
     const httpErrorPayload = serviceErrorToHttpPayload(serviceError, getTodoHttpHandler.url, 'failed to get todos');
 
-    return err(httpErrorPayload);
+    return Err(httpErrorPayload);
   }
 
-  return ok(todos.value);
+  return Ok(todos.unwrap());
 }

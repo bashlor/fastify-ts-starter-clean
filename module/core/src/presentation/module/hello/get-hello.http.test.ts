@@ -2,13 +2,22 @@ import { asFunction } from 'awilix';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getContainer } from '../../../infrastructure/configuration/dependency-container/dependency-container.configuration.js';
+import {EnvironmentConfiguration} from '../../../infrastructure/configuration/environment/environment.configuration.js';
 import { HttpServer } from '../../http-server.js';
 import { registry as helloRouter } from './registry.http.js';
 
 describe('/api/hello', () => {
   let httpServer: HttpServer;
   beforeEach(() => {
-    httpServer = new HttpServer(3000);
+    const configuration: EnvironmentConfiguration = {
+      environment: 'test',
+      host: '0.0.0.0',
+      port: 3000,
+      allowedOrigins: [],
+      cors: false,
+    };
+
+    httpServer = new HttpServer(configuration);
     httpServer.loadRouter(helloRouter, '/api');
   });
 

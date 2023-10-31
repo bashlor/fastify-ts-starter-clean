@@ -1,7 +1,7 @@
-import { Err, err, Ok, ok, Result } from 'neverthrow';
-
 import { TodoCollection } from '../../domain/collection/todo.collection.js';
 import { Todo } from '../../domain/entity/todo/todo.js';
+import {Err, Ok} from '../../shared/lib/monad/result/functions.js';
+import {Result} from '../../shared/lib/monad/result/type.js';
 import { DatabaseHandler } from '../configuration/database/database.configuration.js';
 import { TodoMapper } from '../mapper/todo.mapper.js';
 import { RepositoryError } from './error/repository.error.js';
@@ -15,18 +15,18 @@ export class TodoRepository implements TodoCollection {
       if (serializedTodoResult.isErr()) {
         const error = new RepositoryError('failed to add todo', serializedTodoResult.error, todo);
 
-        return err(error);
+        return Err(error);
       }
 
-      this.db.data.todos.push(serializedTodoResult.value);
+      this.db.data.todos.push(serializedTodoResult.unwrap());
 
       await this.db.write();
 
-      return ok(todo);
+      return Ok(todo);
     } catch (error: any) {
       const repositoryError = new RepositoryError('failed to add todo', error, todo);
 
-      return err(repositoryError);
+      return Err(repositoryError);
     }
   }
 
@@ -38,33 +38,39 @@ export class TodoRepository implements TodoCollection {
         const todoResult = TodoMapper.fromPersistenceToDomain(serializedTodo);
 
         if (todoResult.isErr()) {
+          todoResult
           const error = new RepositoryError('failed to get all todos', todoResult.error, serializedTodo);
 
-          return err(error);
+          return Err(error);
         }
 
-        return ok(todoResult.value);
+
+        return Ok(todoResult.unwrap());
       });
+
+
 
       if (todoResults.some((todoResult) => todoResult.isErr())) {
         const errors = todoResults.filter((todoResult) => todoResult.isErr());
 
         const repositoryError = new RepositoryError(
-          'failed to get all todos',
-          undefined,
-          errors as Err<never, RepositoryError>[]
+            'failed to get all todos',
+            undefined,
+            errors
         );
 
-        return err(repositoryError);
+        return Err(repositoryError);
       }
 
-      const todos = todoResults.map((todoResult) => (todoResult as unknown as Ok<Todo, never>).value);
+      const todos = todoResults.map((todoResult) => todoResult.unwrap());
 
-      return ok(todos);
+      return Ok(todos);
     } catch (error: any) {
       const repositoryError = new RepositoryError('failed to get all todos', error);
 
-      return err(repositoryError);
+      return Err(repositoryError);
     }
   }
+
 }
+

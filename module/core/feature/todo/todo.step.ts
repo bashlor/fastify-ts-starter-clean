@@ -23,7 +23,7 @@ Then(
   async function (this: CustomWorld, todoName: string, todoStatus: string) {
     const todoList = await this.todoService.getAll();
 
-    const todoFromList = todoList._unsafeUnwrap()[0];
+    const todoFromList = todoList.unwrap()[0];
 
     assert.ok(todoFromList.name === todoName, `expected ${todoName} - found : ${todoFromList.name}`);
     assert.ok(todoFromList.status === todoStatus, `expected ${todoName} - found : ${todoStatus}`);

@@ -7,6 +7,7 @@ import {
   getMemoryDatabaseHandler,
 } from '../../../infrastructure/configuration/database/database.configuration.js';
 import { getContainer } from '../../../infrastructure/configuration/dependency-container/dependency-container.configuration.js';
+import {EnvironmentConfiguration} from '../../../infrastructure/configuration/environment/environment.configuration.js';
 import { TodoRepository } from '../../../infrastructure/repository/todo.repository.js';
 import { HttpServer } from '../../http-server.js';
 import { registry as todoRouter } from './registry.http.js';
@@ -17,7 +18,16 @@ describe('/api/todo', () => {
   let dbHandler: DatabaseHandler;
 
   beforeEach(() => {
-    httpServer = new HttpServer(3000);
+    const configuration: EnvironmentConfiguration = {
+      environment: 'test',
+      host: '0.0.0.0',
+      port: 3000,
+      allowedOrigins: [],
+      cors: false,
+    };
+
+    httpServer = new HttpServer(configuration);
+
     httpServer.loadRouter(todoRouter, '/api');
 
     const container = getContainer();

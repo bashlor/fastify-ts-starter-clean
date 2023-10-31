@@ -1,7 +1,8 @@
-import { err, ok, Result } from 'neverthrow';
 import { assertEquals } from 'typia';
 
 import { Todo } from '../../domain/entity/todo/todo.js';
+import {Err, Ok} from '../../shared/lib/monad/result/functions.js';
+import {Result} from '../../shared/lib/monad/result/type.js';
 import { MapperError } from './error/mapper.error.js';
 
 export class TodoMapper {
@@ -9,9 +10,9 @@ export class TodoMapper {
     try {
       assertEquals<Todo>(todo);
 
-      return ok(todo);
+      return Ok(todo);
     } catch (error) {
-      return err(new MapperError(error));
+      return Err(new MapperError(error));
     }
   }
 
@@ -19,9 +20,9 @@ export class TodoMapper {
     try {
       assertEquals<Todo>(todo);
 
-      return ok(todo);
+      return Ok(todo);
     } catch (error) {
-      return err(new MapperError(error));
+      return Err(new MapperError(error));
     }
   }
 }
