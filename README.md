@@ -23,7 +23,6 @@ However, it is easy to add any of these features by following the same architect
 - [VineJs](https://vinejs.dev/docs/introduction) - Validation library for Http requests. Configured to work with Fastify.
 - [Vitest](https://vitest.dev/) - Test runner. Configured to run transformed code with Typia
 - [Cucumber](https://cucumber.io/) - BDD testing framework (useful for doing wishful programming).
-- [Neverthrow](https://github.com/supermacro/neverthrow) - Result type for handling errors. Way more better than throwing exceptions, and using Typescrippt union types.
 
 ## Getting started
 
