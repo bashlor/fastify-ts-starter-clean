@@ -36,7 +36,7 @@
   "scripts": {
     "prepare": "ts-patch install",
     "dev": "nodemon",
-    "bundle": "tsup module/core/src/app.ts --format esm --out-dir bundle",
+    "bundle": " tsc && tsup ./build/src/app.js --format esm --out-dir bundle",
     "build": "tsc",
     "start": "node ../../pruned/build/app.js",
     "lint": "eslint . --ext .ts --fix",
