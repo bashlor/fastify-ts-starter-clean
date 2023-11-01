@@ -28,7 +28,7 @@ COPY ./.eslintrc.cjs /app/.eslintrc.cjs
 
 RUN pnpm run build
 
-RUN pnpm install --prod || true # Will try to apply ts-patch but it will fail and it is not needed anymore
+RUN pnpm prune --prod || true # Will try to apply ts-patch but it will fail and it is not needed anymore. So we ignore the error "ts-patch: not found"
 
 ### Option 2 - Bundle
 
