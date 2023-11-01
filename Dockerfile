@@ -24,15 +24,8 @@ COPY ./pnpm-lock.yaml /app/pnpm-lock.yaml
 COPY ./tsconfig.json /app/tsconfig.json
 COPY ./.eslintrc.cjs /app/.eslintrc.cjs
 
-## Option 1 - Do not bundle
-
 RUN pnpm run build
-
 RUN pnpm prune --prod || true # Will try to apply ts-patch but it will fail and it is not needed anymore. So we ignore the error "ts-patch: not found"
-
-### Option 2 - Bundle
-
-#RUN pnpm run bundle
 
 
 FROM installer as devrunner
@@ -60,12 +53,3 @@ COPY --from=target --chown=fastify:nodejs /app/build ./build
 COPY --from=target --chown=fastify:nodejs /app/package.json ./
 ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["node", "build/src/app.js"]
-
-### Option 2 - Bundle
-# If you use a single file
-#COPY --from=target --chown=fastify:nodejs /app/bundle/app.mjs ./app/app.mjs
-#ENTRYPOINT ["node", "app/app.mjs"]
-
-
-
-
