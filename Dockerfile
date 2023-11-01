@@ -44,6 +44,7 @@ FROM node:20-alpine AS runner
 
 WORKDIR /app
 
+RUN apk add --no-cache tini
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S fastify -u 1001
 
@@ -57,7 +58,8 @@ ENV PORT 3000
 COPY --from=target --chown=fastify:nodejs /app/node_modules ./node_modules
 COPY --from=target --chown=fastify:nodejs /app/build ./build
 COPY --from=target --chown=fastify:nodejs /app/package.json ./
-ENTRYPOINT ["node", "build/src/app.js"]
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD ["node", "build/src/app.js"]
 
 ### Option 2 - Bundle
 # If you use a single file
